@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>🏁 Integrador 2 · FEC Lulú</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d0d1f;--card:#161628;--border:#2a2545;
+  --accent:#fbbf24;--accent2:#f97316;
+  --correct:#34d399;--wrong:#f87171;
+  --text:#ede9fe;--muted:#8b80a8;
+}
+html,body{min-height:100%;background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  -webkit-tap-highlight-color:transparent}
+body{display:flex;flex-direction:column;align-items:center;padding:20px 14px 60px}
+header{text-align:center;margin-bottom:22px;width:100%;max-width:480px}
+.back{display:inline-block;color:var(--accent);font-size:13px;font-weight:600;
+  text-decoration:none;margin-bottom:14px;padding:6px 14px;border-radius:99px;
+  background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1)}
+.eyebrow{font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:6px}
+h1{font-size:clamp(24px,7vw,34px);font-weight:800;color:#fff;line-height:1.15;margin-bottom:8px}
+.tag-row{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:8px 0 6px}
+.tag{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);
+  border-radius:99px;padding:3px 11px;font-size:11px;color:var(--accent);font-weight:600}
+.subtitle{color:var(--muted);font-size:12px;margin-top:4px}
+.pw{width:100%;max-width:480px;margin-bottom:16px}
+.pm{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:5px}
+.pt{height:5px;background:var(--border);border-radius:99px;overflow:hidden}
+.pf{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));
+  border-radius:99px;transition:width .4s ease}
+.card{background:var(--card);border:1px solid var(--border);border-radius:20px;
+  padding:22px 18px;width:100%;max-width:480px;box-shadow:0 8px 40px rgba(0,0,0,.5)}
+.qn{font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:10px}
+.qt{font-size:clamp(15px,4vw,18px);font-weight:700;line-height:1.45;margin-bottom:20px;color:#fff}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{background:transparent;border:1.5px solid var(--border);border-radius:13px;
+  padding:13px 14px;color:var(--text);font-family:inherit;font-size:14px;text-align:left;
+  cursor:pointer;display:flex;align-items:flex-start;gap:11px;line-height:1.45;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  transition:border-color .15s,background .15s;width:100%}
+.opt:active:not(:disabled){background:rgba(255,255,255,0.05)}
+.ol{width:26px;height:26px;min-width:26px;border-radius:50%;background:var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;
+  transition:background .2s;flex-shrink:0}
+.opt.correct{border-color:var(--correct);background:rgba(52,211,153,.08)}
+.opt.correct .ol{background:var(--correct);color:#0d1f17}
+.opt.wrong{border-color:var(--wrong);background:rgba(248,113,113,.08)}
+.opt.wrong .ol{background:var(--wrong);color:#fff}
+.opt:disabled{cursor:default}
+.fb{margin-top:14px;padding:12px 14px;border-radius:12px;font-size:13px;
+  line-height:1.55;display:none}
+.fb.show{display:block}
+.fb.ok{background:rgba(52,211,153,.09);border:1px solid rgba(52,211,153,.25);color:#6ee7b7}
+.fb.bad{background:rgba(248,113,113,.09);border:1px solid rgba(248,113,113,.25);color:#fca5a5}
+.bn{margin-top:16px;width:100%;padding:15px;border-radius:13px;border:none;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;
+  font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;display:none;
+  touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.bn.show{display:block}
+.results{display:none;width:100%;max-width:480px}
+.results.show{display:block}
+.rc{background:var(--card);border:1px solid var(--border);border-radius:20px;
+  padding:36px 18px;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,.5)}
+.sr{width:110px;height:110px;border-radius:50%;
+  background:conic-gradient(var(--accent) var(--pct,0%),var(--border) 0);
+  display:flex;align-items:center;justify-content:center;margin:0 auto 18px;position:relative}
+.sr::before{content:'';width:80px;height:80px;border-radius:50%;
+  background:var(--card);position:absolute}
+.sn{font-size:24px;font-weight:800;position:relative;z-index:1;color:#fff}
+.rc h2{font-size:20px;font-weight:700;margin-bottom:6px;color:#fff}
+.rc>p{color:var(--muted);font-size:13px;margin-bottom:22px}
+.rl{text-align:left;display:flex;flex-direction:column;gap:8px;margin-bottom:22px}
+.ri{padding:10px 13px;border-radius:10px;font-size:12px;line-height:1.5;border:1px solid}
+.ri.ok{border-color:rgba(52,211,153,.3);background:rgba(52,211,153,.06)}
+.ri.fail{border-color:rgba(248,113,113,.3);background:rgba(248,113,113,.06)}
+.ri .rlab{font-weight:600;display:block;margin-bottom:2px}
+.ri.ok .rlab{color:#6ee7b7}.ri.fail .rlab{color:#fca5a5}
+.ri .rans{color:var(--muted);font-size:11px}
+.br{width:100%;padding:15px;border-radius:13px;border:none;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;
+  font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;touch-action:manipulation}
+.br.rev{background:linear-gradient(135deg,var(--wrong),#fb923c);
+  margin-bottom:10px;display:none}
+.br.rev.show{display:block}
+.repaso-chip{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:#fb923c;background:rgba(251,146,60,.12);
+  border:1px solid rgba(251,146,60,.3);border-radius:99px;padding:3px 10px;margin-bottom:10px}
+</style>
+</head>
+<body>
+<header>
+  <a href="index.html?v=20261007-1" class="back">← Volver al inicio</a>
+  <div class="eyebrow">FEC · Integrador · Todo el capítulo</div>
+  <h1>🏁 Integrador 2</h1>
+  <div class="tag-row"><span class="tag">📚 Puntos 1 a 9</span><span class="tag">🎯 Preguntas nuevas</span></div>
+  <p class="subtitle">20 preguntas · Basado en el libro (cap. 5) y el TP</p>
+</header>
+<div class="pw">
+  <div class="pm"><span id="pt">Pregunta 1 de 20</span><span id="st">0 correctas</span></div>
+  <div class="pt"><div class="pf" id="pf" style="width:8%"></div></div>
+</div>
+<div class="card" id="qcard">
+  <div class="qn" id="qn">Pregunta 1</div>
+  <div class="qt" id="qt"></div>
+  <div class="opts" id="qo"></div>
+  <div class="fb" id="fb"></div>
+  <button class="bn" id="bn">Siguiente →</button>
+</div>
+<div class="results" id="res">
+  <div class="rc">
+    <div class="sr" id="sr"><span class="sn" id="sf"></span></div>
+    <h2 id="rt"></h2><p id="rs"></p>
+    <div class="rl" id="rl"></div>
+    <button class="br rev" id="brev" onclick="init(FALLIDAS)">🎯 Repasar mis errores</button>
+    <button class="br" id="bfull" onclick="init()">🔁 Intentar de nuevo</button>
+  </div>
+</div>
+<script>
+var Q=[{"q": "Un partido presenta a sus candidatos y luego ocupa cargos en el Congreso. ¿Qué función está cumpliendo?", "opts": ["Transmitir demandas", "Controlar a la Justicia Electoral", "Participar en las instituciones del Estado", "Organizar el escrutinio"], "ans": 2, "exp": "Proveen al gobierno de funcionarios y dirigentes."}, {"q": "¿Cuál es la principal diferencia de organización entre partidos de notables y de masas?", "opts": ["Los de masas tenían estructura permanente; los de notables, no", "Los de masas existían solo dentro del Parlamento, sin militantes", "No hay diferencias: los dos se organizaban exactamente igual", "Los de notables tenían muchos más afiliados que los de masas"], "ans": 0, "exp": "Los de masas seguían activos fuera de las elecciones, con gente dedicada al partido."}, {"q": "¿Por qué el Partido Socialista puede considerarse un partido de masas?", "opts": ["Porque solo actuaba en el Parlamento", "Porque organizaba a muchos trabajadores con estructura estable", "Porque lo dirigían pocos terratenientes", "Porque buscaba votos de todos los sectores sin ideología"], "ans": 1, "exp": "Es el argumento del TP."}, {"q": "¿Qué influencia tuvo la inmigración en la política argentina?", "opts": ["Hizo desaparecer los partidos políticos durante varias décadas", "Fortaleció el régimen oligárquico y el fraude del PAN", "Trajo ideas socialistas y anarquistas al movimiento obrero", "Trajo el voto femenino desde Europa a fines del siglo XIX"], "ans": 2, "exp": "Más de 6 millones de inmigrantes llegaron entre 1870 y 1914."}, {"q": "¿Qué diferencia había entre la UCR y el PAN respecto del fraude?", "opts": ["Los dos se beneficiaban del fraude", "La UCR lo denunciaba; el PAN lo usaba", "Los dos lo denunciaban", "Ninguno de los dos se ocupaba del tema"], "ans": 1, "exp": "La UC nació para denunciar el fraude del régimen."}, {"q": "¿Con qué porcentaje ganó Perón en 1946?", "opts": ["Con el 30%", "Con el 48,64%", "Con casi el 62%", "Con algo más del 50%"], "ans": 3, "exp": "El 62% fue en 1973 con la fórmula Perón–Isabel."}, {"q": "¿Qué nueva forma de participar trajo el peronismo, además de votar?", "opts": ["El voto calificado, reservado a los que sabían leer y escribir", "La abstención electoral para protestar contra el fraude", "Las manifestaciones en Plaza de Mayo y la actividad sindical", "La lucha armada como única forma de hacer oír los reclamos"], "ans": 2, "exp": "El pueblo se expresaba no solo votando periódicamente."}, {"q": "¿Qué partido estuvo proscripto entre 1955 y 1973?", "opts": ["El Partido Justicialista", "El PAN", "El Partido Socialista", "La Unión Cívica Radical"], "ans": 0, "exp": "Le prohibieron participar en elecciones y en la actividad política oficial."}, {"q": "¿Qué hecho marcó el fin de la hegemonía del PAN?", "opts": ["El triunfo de Yrigoyen en 1916", "El 17 de octubre de 1945", "El golpe de 1930", "La revolución de 1890"], "ans": 0, "exp": "Hasta 1916 el PAN había ganado todas las elecciones nacionales."}, {"q": "¿Qué partido gobernaba cuando surgió el Frente Grande?", "opts": ["La Alianza, con De la Rúa", "El PJ, con Carlos Menem", "El Frepaso, con Chacho Álvarez", "La UCR, con Raúl Alfonsín"], "ans": 1, "exp": "Los disidentes del PJ estaban en desacuerdo con Menem."}, {"q": "La Alianza es un ejemplo de que, en los partidos electorales…", "opts": ["Es común armar alianzas para ganar elecciones", "Solo se puede competir solo", "Está prohibido unirse con otros partidos", "Las alianzas siempre perduran en el tiempo"], "ans": 0, "exp": "Armar alianzas para ganar es una característica de los partidos electorales."}, {"q": "¿Cómo terminó el gobierno de la Alianza?", "opts": ["Con un golpe militar que derrocó a De la Rúa y a Álvarez", "Con la renuncia de Menem y la vuelta anticipada del PJ", "Con la renuncia de De la Rúa en diciembre de 2001", "Completando su mandato y siendo reelecto en las elecciones"], "ans": 2, "exp": "La Alianza, muy debilitada, no pudo controlar la crisis."}, {"q": "Según el libro (escrito en 2008), ¿qué fuerza nueva estaba al frente del Gobierno de la Ciudad de Buenos Aires?", "opts": ["El Frepaso", "El PAN", "El Partido Laborista", "El PRO"], "ans": 3, "exp": "Fue una de las experiencias políticas que surgieron después de 2001."}, {"q": "¿Cuál es el orden correcto de estos presidentes?", "opts": ["Alfonsín → De la Rúa → Menem", "De la Rúa → Menem → Alfonsín", "Menem → Alfonsín → De la Rúa", "Alfonsín → Menem → De la Rúa"], "ans": 3, "exp": "1983 Alfonsín, 1989 Menem, 1999 De la Rúa."}, {"q": "¿Qué tienen en común la Junta Renovadora (1946) y el Frente Grande (1993)?", "opts": ["Los dos funcionaron como partidos de notables dentro del Congreso", "Los dos fueron creados por los sindicatos de la CGT para apoyar a Perón", "Los dos ganaron la presidencia solos, sin aliarse con otros partidos", "Los dos se desprendieron de un partido tradicional y se aliaron con otros"], "ans": 3, "exp": "La Junta Renovadora salió de la UCR; el Frente Grande, del PJ."}, {"q": "¿Qué muestran las fracturas, alianzas y nuevos partidos desde los años 90?", "opts": ["Que la gente confía cada vez más en los partidos tradicionales", "La crisis de representación y la transformación de los partidos", "El regreso de los partidos de notables y del voto restringido", "El fortalecimiento del bipartidismo entre el PJ y la UCR"], "ans": 1, "exp": "Los partidos de masas se fueron convirtiendo en electorales."}, {"q": "¿Qué fue el régimen oligárquico que se impuso después de 1930?", "opts": ["El primer gobierno peronista, con apoyo de los sindicatos", "Un régimen que usó el fraude para limitar la participación", "Un régimen que amplió el voto a las mujeres y a los extranjeros", "Un gobierno de la UCR que terminó con el fraude electoral"], "ans": 1, "exp": "Lo derrocó otro golpe militar en 1943."}, {"q": "¿Qué diferencia a un partido de masas de uno electoral respecto de sus votantes?", "opts": ["El de masas no tiene votantes propios, solo afiliados que pagan una cuota", "No hay ninguna diferencia: los dos tienen votantes igual de fieles y estables", "El de masas representa a un sector; el electoral busca a todos", "El electoral representa solo a los obreros y el de masas a todos los demás"], "ans": 2, "exp": "El electoral ya no se identifica con un único sector social."}, {"q": "Si la sociedad participa muy poco en política, ¿qué problema genera según el texto?", "opts": ["Los partidos se vuelven más fuertes", "Aumenta la identificación con los partidos", "Desaparece la corrupción", "Es más difícil representarla"], "ans": 3, "exp": "La baja participación es parte de la crisis."}, {"q": "¿Por qué la UCR y el PJ son «los dos clásicos partidos de masas argentinos»?", "opts": ["Porque crecieron en el siglo XX con amplias bases populares", "Porque nunca ganaron elecciones y siempre estuvieron en la oposición", "Porque los dos surgieron después de la crisis de 2001", "Porque los dos nacieron como partidos de notables dentro del Parlamento"], "ans": 0, "exp": "Fueron creciendo y consolidándose durante el siglo XX."}];
+var ALL=Q,cur=0,score=0,ans=[],T=Q.length,FALLIDAS=[],repaso=false;
+function init(set){
+  var usar=(set&&set.length)?set:ALL;
+  repaso=usar.length<ALL.length;
+  Q=usar;T=Q.length;cur=0;score=0;ans=[];
+  document.getElementById('qcard').style.display='block';
+  document.getElementById('res').className='results';render()}
+function render(){
+  var q=Q[cur];
+  document.getElementById('qn').innerHTML=(repaso?'<span class="repaso-chip">🎯 Repaso de errores</span><br>':'')+'Pregunta '+(cur+1);
+  document.getElementById('qt').textContent=q.q;
+  document.getElementById('pt').textContent='Pregunta '+(cur+1)+' de '+T;
+  document.getElementById('st').textContent=score+(score!==1?' correctas':' correcta');
+  document.getElementById('pf').style.width=(Math.round((cur/T)*100)+8)+'%';
+  var fb=document.getElementById('fb');fb.className='fb';fb.innerHTML='';
+  document.getElementById('bn').className='bn';
+  var c=document.getElementById('qo');c.innerHTML='';
+  var L=['A','B','C','D'];
+  for(var i=0;i<q.opts.length;i++){(function(idx){
+    var b=document.createElement('button');b.className='opt';
+    b.innerHTML='<span class="ol">'+L[idx]+'</span><span>'+q.opts[idx]+'</span>';
+    b.addEventListener('click',function(){pick(idx)});c.appendChild(b);
+  })(i)}
+}
+function pick(idx){
+  var q=Q[cur];
+  var bs=document.querySelectorAll('.opt');
+  for(var i=0;i<bs.length;i++)bs[i].disabled=true;
+  var ok=idx===q.ans;if(ok)score++;
+  ans.push({q:q.q,chosen:idx,ans:q.ans,ok:ok,opts:q.opts});
+  bs[q.ans].className+=' correct';if(!ok)bs[idx].className+=' wrong';
+  var fb=document.getElementById('fb');
+  fb.innerHTML=ok?'✅ ¡Correcto! '+q.exp:'❌ Incorrecto. La correcta era: '+q.opts[q.ans]+'. '+q.exp;
+  fb.className='fb show '+(ok?'ok':'bad');
+  var bn=document.getElementById('bn');
+  bn.textContent=cur<T-1?'Siguiente →':'Ver resultados 🎉';bn.className='bn show';
+}
+document.getElementById('bn').addEventListener('click',function(){
+  cur++;if(cur<T)render();else showRes();
+});
+function showRes(){
+  document.getElementById('qcard').style.display='none';
+  document.getElementById('res').className='results show';
+  var pct=Math.round((score/T)*100);
+  document.getElementById('sr').style.setProperty('--pct',pct+'%');
+  document.getElementById('sf').textContent=score+'/'+T;
+  var ti,su;
+  if(score===T){ti=repaso?'¡Corregidas! 🌟':'¡Perfecto! 🌟';su=repaso?'Te salieron todas las que antes fallabas.':''+T+'/'+T+'. ¡Lo tenés clavado!'}
+  else if(score>=T*.8){ti='¡Muy bien! 💪';su='Casi todo bien. Repasá las que fallaste.'}
+  else if(score>=T*.6){ti='Bien, podés mejorar 📚';su='Más de la mitad bien. Vale repasar.'}
+  else{ti='A repasar 😅';su='No te preocupes, con otro repaso va a quedar. 💜'}
+  document.getElementById('rt').textContent=ti;document.getElementById('rs').textContent=su;
+  var rl=document.getElementById('rl');rl.innerHTML='';
+  FALLIDAS=[];
+  for(var i=0;i<ans.length;i++){
+    var a=ans[i];if(!a.ok)FALLIDAS.push(Q[i]);
+    var d=document.createElement('div');d.className='ri '+(a.ok?'ok':'fail');
+    var h='<span class="rlab">'+(a.ok?'✅':'❌')+' P'+(i+1)+': '+a.q+'</span>';
+    if(!a.ok)h+='<span class="rans">Tu respuesta: '+a.opts[a.chosen]+' · Correcta: '+a.opts[a.ans]+'</span>';
+    d.innerHTML=h;rl.appendChild(d);
+  }
+  var brev=document.getElementById('brev');
+  if(FALLIDAS.length){brev.className='br rev show';
+    brev.textContent='🎯 Repasar mis errores ('+FALLIDAS.length+')';}
+  else{brev.className='br rev';}
+  document.getElementById('bfull').textContent=repaso?'🔁 Hacer el examen completo':'🔁 Intentar de nuevo';
+  guardar();
+}
+try{var _b=document.querySelector('.back');
+    if(_b)_b.href='index.html?v='+Math.floor(Date.now()/864e5);}catch(e){}
+function guardar(){
+  if(repaso)return;                       // el repaso no cuenta como nota
+  try{
+    var k='lulu:'+location.pathname.split('/').pop().replace('.html','');
+    var p={};try{p=JSON.parse(localStorage.getItem(k))||{}}catch(e){}
+    localStorage.setItem(k,JSON.stringify({
+      total:ALL.length,
+      ultimo:score,
+      mejor:Math.max(p.mejor||0,score),
+      intentos:(p.intentos||0)+1,
+      fecha:new Date().toISOString().slice(0,10)
+    }));
+  }catch(e){}                              // si el navegador lo bloquea, sigue andando igual
+}
+init();
+</script>
+</body>
+</html>

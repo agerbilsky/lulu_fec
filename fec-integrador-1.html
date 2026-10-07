@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>🏁 Integrador 1 · FEC Lulú</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d0d1f;--card:#161628;--border:#2a2545;
+  --accent:#fbbf24;--accent2:#f97316;
+  --correct:#34d399;--wrong:#f87171;
+  --text:#ede9fe;--muted:#8b80a8;
+}
+html,body{min-height:100%;background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  -webkit-tap-highlight-color:transparent}
+body{display:flex;flex-direction:column;align-items:center;padding:20px 14px 60px}
+header{text-align:center;margin-bottom:22px;width:100%;max-width:480px}
+.back{display:inline-block;color:var(--accent);font-size:13px;font-weight:600;
+  text-decoration:none;margin-bottom:14px;padding:6px 14px;border-radius:99px;
+  background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1)}
+.eyebrow{font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:6px}
+h1{font-size:clamp(24px,7vw,34px);font-weight:800;color:#fff;line-height:1.15;margin-bottom:8px}
+.tag-row{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:8px 0 6px}
+.tag{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);
+  border-radius:99px;padding:3px 11px;font-size:11px;color:var(--accent);font-weight:600}
+.subtitle{color:var(--muted);font-size:12px;margin-top:4px}
+.pw{width:100%;max-width:480px;margin-bottom:16px}
+.pm{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:5px}
+.pt{height:5px;background:var(--border);border-radius:99px;overflow:hidden}
+.pf{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));
+  border-radius:99px;transition:width .4s ease}
+.card{background:var(--card);border:1px solid var(--border);border-radius:20px;
+  padding:22px 18px;width:100%;max-width:480px;box-shadow:0 8px 40px rgba(0,0,0,.5)}
+.qn{font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:10px}
+.qt{font-size:clamp(15px,4vw,18px);font-weight:700;line-height:1.45;margin-bottom:20px;color:#fff}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{background:transparent;border:1.5px solid var(--border);border-radius:13px;
+  padding:13px 14px;color:var(--text);font-family:inherit;font-size:14px;text-align:left;
+  cursor:pointer;display:flex;align-items:flex-start;gap:11px;line-height:1.45;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  transition:border-color .15s,background .15s;width:100%}
+.opt:active:not(:disabled){background:rgba(255,255,255,0.05)}
+.ol{width:26px;height:26px;min-width:26px;border-radius:50%;background:var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;
+  transition:background .2s;flex-shrink:0}
+.opt.correct{border-color:var(--correct);background:rgba(52,211,153,.08)}
+.opt.correct .ol{background:var(--correct);color:#0d1f17}
+.opt.wrong{border-color:var(--wrong);background:rgba(248,113,113,.08)}
+.opt.wrong .ol{background:var(--wrong);color:#fff}
+.opt:disabled{cursor:default}
+.fb{margin-top:14px;padding:12px 14px;border-radius:12px;font-size:13px;
+  line-height:1.55;display:none}
+.fb.show{display:block}
+.fb.ok{background:rgba(52,211,153,.09);border:1px solid rgba(52,211,153,.25);color:#6ee7b7}
+.fb.bad{background:rgba(248,113,113,.09);border:1px solid rgba(248,113,113,.25);color:#fca5a5}
+.bn{margin-top:16px;width:100%;padding:15px;border-radius:13px;border:none;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;
+  font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;display:none;
+  touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.bn.show{display:block}
+.results{display:none;width:100%;max-width:480px}
+.results.show{display:block}
+.rc{background:var(--card);border:1px solid var(--border);border-radius:20px;
+  padding:36px 18px;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,.5)}
+.sr{width:110px;height:110px;border-radius:50%;
+  background:conic-gradient(var(--accent) var(--pct,0%),var(--border) 0);
+  display:flex;align-items:center;justify-content:center;margin:0 auto 18px;position:relative}
+.sr::before{content:'';width:80px;height:80px;border-radius:50%;
+  background:var(--card);position:absolute}
+.sn{font-size:24px;font-weight:800;position:relative;z-index:1;color:#fff}
+.rc h2{font-size:20px;font-weight:700;margin-bottom:6px;color:#fff}
+.rc>p{color:var(--muted);font-size:13px;margin-bottom:22px}
+.rl{text-align:left;display:flex;flex-direction:column;gap:8px;margin-bottom:22px}
+.ri{padding:10px 13px;border-radius:10px;font-size:12px;line-height:1.5;border:1px solid}
+.ri.ok{border-color:rgba(52,211,153,.3);background:rgba(52,211,153,.06)}
+.ri.fail{border-color:rgba(248,113,113,.3);background:rgba(248,113,113,.06)}
+.ri .rlab{font-weight:600;display:block;margin-bottom:2px}
+.ri.ok .rlab{color:#6ee7b7}.ri.fail .rlab{color:#fca5a5}
+.ri .rans{color:var(--muted);font-size:11px}
+.br{width:100%;padding:15px;border-radius:13px;border:none;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;
+  font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;touch-action:manipulation}
+.br.rev{background:linear-gradient(135deg,var(--wrong),#fb923c);
+  margin-bottom:10px;display:none}
+.br.rev.show{display:block}
+.repaso-chip{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:#fb923c;background:rgba(251,146,60,.12);
+  border:1px solid rgba(251,146,60,.3);border-radius:99px;padding:3px 10px;margin-bottom:10px}
+</style>
+</head>
+<body>
+<header>
+  <a href="index.html?v=20261007-1" class="back">← Volver al inicio</a>
+  <div class="eyebrow">FEC · Integrador · Todo el capítulo</div>
+  <h1>🏁 Integrador 1</h1>
+  <div class="tag-row"><span class="tag">📚 Puntos 1 a 9</span><span class="tag">🎯 Tipo prueba</span></div>
+  <p class="subtitle">20 preguntas · Basado en el libro (cap. 5) y el TP</p>
+</header>
+<div class="pw">
+  <div class="pm"><span id="pt">Pregunta 1 de 20</span><span id="st">0 correctas</span></div>
+  <div class="pt"><div class="pf" id="pf" style="width:8%"></div></div>
+</div>
+<div class="card" id="qcard">
+  <div class="qn" id="qn">Pregunta 1</div>
+  <div class="qt" id="qt"></div>
+  <div class="opts" id="qo"></div>
+  <div class="fb" id="fb"></div>
+  <button class="bn" id="bn">Siguiente →</button>
+</div>
+<div class="results" id="res">
+  <div class="rc">
+    <div class="sr" id="sr"><span class="sn" id="sf"></span></div>
+    <h2 id="rt"></h2><p id="rs"></p>
+    <div class="rl" id="rl"></div>
+    <button class="br rev" id="brev" onclick="init(FALLIDAS)">🎯 Repasar mis errores</button>
+    <button class="br" id="bfull" onclick="init()">🔁 Intentar de nuevo</button>
+  </div>
+</div>
+<script>
+var Q=[{"q": "¿Cuál es el orden correcto de aparición de los tipos de partido?", "opts": ["Masas → notables → electorales", "Electorales → masas → notables", "Notables → masas → electorales", "Notables → electorales → masas"], "ans": 2, "exp": "Primero los notables (s. XIX), después los de masas (fines s. XIX – s. XX) y por último los electorales."}, {"q": "¿Qué relación hay entre la ampliación del voto y el cambio de los partidos?", "opts": ["Con más votantes, los partidos necesitaron organizaciones amplias y permanentes", "No hay ninguna relación: los partidos cambiaron por motivos totalmente distintos", "Al aumentar los votantes, volvieron con más fuerza los partidos de notables", "Al aumentar los votantes, los partidos dejaron de existir y los reemplazaron los sindicatos"], "ans": 0, "exp": "Por eso los partidos de masas reemplazaron a los de notables."}, {"q": "Al surgir, ¿qué tipo de partido era la UCR?", "opts": ["Un partido de notables, igual que el PAN de Roca", "Un partido electoral o «atrapatodo», sin ideas propias", "Un partido sin organización, que solo existía en el Parlamento", "Un partido de masas en formación, que quería incluir a más gente"], "ans": 3, "exp": "Tenía un objetivo claro, organización estable y creció al ampliarse el voto (argumento del TP)."}, {"q": "¿Qué ley hizo posible el triunfo de Yrigoyen en 1916?", "opts": ["La Constitución de 1853", "La ley de voto femenino, de 1947", "El Reform Act, de 1832", "La Ley Sáenz Peña, de 1912"], "ans": 3, "exp": "Con voto universal masculino, secreto y obligatorio, el fraude ya no alcanzaba."}, {"q": "¿Qué rasgo del PJ muestra que era un partido de masas?", "opts": ["Que lo dirigían pocos notables en el Parlamento", "Que no tenía ideología definida", "Su amplia base trabajadora y su vínculo con los sindicatos", "Que sus votantes cambiaban en cada elección"], "ans": 2, "exp": "El Partido Laborista, uno de sus apoyos, lo crearon los sindicatos de la CGT."}, {"q": "Un partido contrata publicistas, cuida la imagen del candidato y busca votos de todos los sectores. ¿Qué tipo de partido es?", "opts": ["Un partido de masas clásico", "Un partido electoral o «atrapatodo»", "Un partido de notables", "Un partido oligárquico"], "ans": 1, "exp": "Medios, imagen y discurso amplio son marcas de los partidos electorales."}, {"q": "Un partido organiza cursos de oficios y atención de salud para obreros y sus familias. ¿Qué tipo de partido es?", "opts": ["Un partido de masas", "Un partido oligárquico", "Un partido electoral", "Un partido de notables"], "ans": 0, "exp": "Los partidos de masas hacían actividades sociales para sus seguidores."}, {"q": "En un club del Parlamento, un grupo de hombres ricos decide quién será candidato. ¿Qué tipo de partido es?", "opts": ["Un partido electoral", "Un partido de notables", "Una alianza electoral", "Un partido de masas"], "ans": 1, "exp": "Los partidos de notables armaban programas y candidaturas dentro del Parlamento."}, {"q": "¿Qué frase expresa que los partidos representan partes de la sociedad?", "opts": ["«Los partidos están por encima de la sociedad y la guían»", "«Los partidos reflejan las diferencias de la sociedad»", "«Un país solo necesita un partido que represente a todos»", "«Los partidos deben pensar todos igual para gobernar bien»"], "ans": 1, "exp": "Se relaciona con el origen de la palabra: partire, dividir."}, {"q": "¿Cuál de estos partidos se fundó primero?", "opts": ["El PJ", "El Partido Socialista", "El Frepaso", "La UCR"], "ans": 3, "exp": "UCR 1891 → PS 1896 → PJ 1947 → Frepaso en los 90."}, {"q": "¿Qué marcó el paso del bipartidismo al pluripartidismo en la Argentina?", "opts": ["La fundación del PAN y los acuerdos entre los gobernadores", "La sanción de la Ley Sáenz Peña y el triunfo de Yrigoyen en 1916", "La aparición del Frente Grande y el Frepaso con fuerte apoyo electoral", "El golpe militar de 1955 y la proscripción del peronismo"], "ans": 2, "exp": "En 1995 el Frepaso sacó cerca del 30%."}, {"q": "¿Qué es la crisis de representación?", "opts": ["Cuando un mismo partido gana dos elecciones seguidas y nadie lo controla", "Cuando hay tantos candidatos que los votantes no saben a quién elegir", "Cuando la gente deja de sentirse representada por los partidos", "Cuando el Congreso no tiene suficientes bancas para todos los partidos"], "ans": 2, "exp": "Se agudizó en los 90 y explotó en 2001."}, {"q": "¿Qué tienen en común 1930 y 1955?", "opts": ["En ambos años se amplió el derecho al voto a nuevos sectores sociales", "En ambos años ganó las elecciones una alianza de partidos opositores", "En ambos años se fundó un partido de masas que luego gobernó el país", "Golpes que derrocaron a presidentes elegidos por el voto"], "ans": 3, "exp": "1930: Yrigoyen (UCR). 1955: Perón (PJ)."}, {"q": "¿Qué incorporó la ley de 1947 que la Ley Sáenz Peña no incluía?", "opts": ["El voto obligatorio", "El voto de las mujeres", "El voto secreto", "El voto de los varones trabajadores"], "ans": 1, "exp": "La Ley Sáenz Peña era universal, pero solo masculina."}, {"q": "¿Qué función de los partidos se puso en duda en los años 90?", "opts": ["Organizar y dirigir a las Fuerzas Armadas", "Contar los votos en cada mesa el día de la elección", "Escribir y reformar la Constitución Nacional", "Transmitir las demandas y necesidades de la sociedad"], "ans": 3, "exp": "La pregunta era si seguían siendo capaces de hacerlo."}, {"q": "¿Qué relación hay entre los partidos y la democracia representativa?", "opts": ["Los partidos aparecieron para reemplazar a la democracia representativa", "Nacieron juntos: los partidos son intermediarios entre pueblo y representantes", "No tienen ninguna relación: pueden existir uno sin el otro sin problemas", "Los partidos existían desde varios siglos antes de que existiera la democracia"], "ans": 1, "exp": "Son tan jóvenes como la democracia representativa."}, {"q": "La Concertación por la Democracia de Chile es un ejemplo de…", "opts": ["Partidos afines unidos en una lista con nombre nuevo", "Un partido de notables", "Un grupo que se desprende de un partido tradicional", "Un régimen oligárquico"], "ans": 0, "exp": "Fue una coalición de centro y centroizquierda que gobernó Chile entre 1990 y 2010."}, {"q": "¿Por qué el PAN fue reemplazado como fuerza dominante en 1916?", "opts": ["Porque con el voto secreto y obligatorio el fraude dejó de funcionar", "Porque se fusionó con el Partido Justicialista para enfrentar a los radicales", "Porque el Partido Socialista le ganó la presidencia con el voto obrero", "Porque un golpe militar lo prohibió y encarceló a sus principales dirigentes"], "ans": 0, "exp": "La ampliación del voto terminó con su hegemonía."}, {"q": "¿Qué diferencia hay entre la identificación con el PJ en 1946 y la relación con los partidos en 2001?", "opts": ["En los dos momentos la sociedad confiaba plenamente en los partidos", "En 1946 casi nadie votaba al PJ y en 2001 era el partido más querido", "Se pasó de una identificación intensa a un desprestigio total", "En 2001 la gente se identificaba con los partidos más que nunca antes"], "ans": 2, "exp": "El cambio muestra la crisis de representación."}, {"q": "¿Qué tipo de partido predomina hoy, según el texto?", "opts": ["Los partidos electorales o «atrapatodo»", "Los partidos de masas clásicos", "Los partidos de notables", "Los partidos oligárquicos"], "ans": 0, "exp": "La mayoría de los partidos actuales encaja en el modelo electoral."}];
+var ALL=Q,cur=0,score=0,ans=[],T=Q.length,FALLIDAS=[],repaso=false;
+function init(set){
+  var usar=(set&&set.length)?set:ALL;
+  repaso=usar.length<ALL.length;
+  Q=usar;T=Q.length;cur=0;score=0;ans=[];
+  document.getElementById('qcard').style.display='block';
+  document.getElementById('res').className='results';render()}
+function render(){
+  var q=Q[cur];
+  document.getElementById('qn').innerHTML=(repaso?'<span class="repaso-chip">🎯 Repaso de errores</span><br>':'')+'Pregunta '+(cur+1);
+  document.getElementById('qt').textContent=q.q;
+  document.getElementById('pt').textContent='Pregunta '+(cur+1)+' de '+T;
+  document.getElementById('st').textContent=score+(score!==1?' correctas':' correcta');
+  document.getElementById('pf').style.width=(Math.round((cur/T)*100)+8)+'%';
+  var fb=document.getElementById('fb');fb.className='fb';fb.innerHTML='';
+  document.getElementById('bn').className='bn';
+  var c=document.getElementById('qo');c.innerHTML='';
+  var L=['A','B','C','D'];
+  for(var i=0;i<q.opts.length;i++){(function(idx){
+    var b=document.createElement('button');b.className='opt';
+    b.innerHTML='<span class="ol">'+L[idx]+'</span><span>'+q.opts[idx]+'</span>';
+    b.addEventListener('click',function(){pick(idx)});c.appendChild(b);
+  })(i)}
+}
+function pick(idx){
+  var q=Q[cur];
+  var bs=document.querySelectorAll('.opt');
+  for(var i=0;i<bs.length;i++)bs[i].disabled=true;
+  var ok=idx===q.ans;if(ok)score++;
+  ans.push({q:q.q,chosen:idx,ans:q.ans,ok:ok,opts:q.opts});
+  bs[q.ans].className+=' correct';if(!ok)bs[idx].className+=' wrong';
+  var fb=document.getElementById('fb');
+  fb.innerHTML=ok?'✅ ¡Correcto! '+q.exp:'❌ Incorrecto. La correcta era: '+q.opts[q.ans]+'. '+q.exp;
+  fb.className='fb show '+(ok?'ok':'bad');
+  var bn=document.getElementById('bn');
+  bn.textContent=cur<T-1?'Siguiente →':'Ver resultados 🎉';bn.className='bn show';
+}
+document.getElementById('bn').addEventListener('click',function(){
+  cur++;if(cur<T)render();else showRes();
+});
+function showRes(){
+  document.getElementById('qcard').style.display='none';
+  document.getElementById('res').className='results show';
+  var pct=Math.round((score/T)*100);
+  document.getElementById('sr').style.setProperty('--pct',pct+'%');
+  document.getElementById('sf').textContent=score+'/'+T;
+  var ti,su;
+  if(score===T){ti=repaso?'¡Corregidas! 🌟':'¡Perfecto! 🌟';su=repaso?'Te salieron todas las que antes fallabas.':''+T+'/'+T+'. ¡Lo tenés clavado!'}
+  else if(score>=T*.8){ti='¡Muy bien! 💪';su='Casi todo bien. Repasá las que fallaste.'}
+  else if(score>=T*.6){ti='Bien, podés mejorar 📚';su='Más de la mitad bien. Vale repasar.'}
+  else{ti='A repasar 😅';su='No te preocupes, con otro repaso va a quedar. 💜'}
+  document.getElementById('rt').textContent=ti;document.getElementById('rs').textContent=su;
+  var rl=document.getElementById('rl');rl.innerHTML='';
+  FALLIDAS=[];
+  for(var i=0;i<ans.length;i++){
+    var a=ans[i];if(!a.ok)FALLIDAS.push(Q[i]);
+    var d=document.createElement('div');d.className='ri '+(a.ok?'ok':'fail');
+    var h='<span class="rlab">'+(a.ok?'✅':'❌')+' P'+(i+1)+': '+a.q+'</span>';
+    if(!a.ok)h+='<span class="rans">Tu respuesta: '+a.opts[a.chosen]+' · Correcta: '+a.opts[a.ans]+'</span>';
+    d.innerHTML=h;rl.appendChild(d);
+  }
+  var brev=document.getElementById('brev');
+  if(FALLIDAS.length){brev.className='br rev show';
+    brev.textContent='🎯 Repasar mis errores ('+FALLIDAS.length+')';}
+  else{brev.className='br rev';}
+  document.getElementById('bfull').textContent=repaso?'🔁 Hacer el examen completo':'🔁 Intentar de nuevo';
+  guardar();
+}
+try{var _b=document.querySelector('.back');
+    if(_b)_b.href='index.html?v='+Math.floor(Date.now()/864e5);}catch(e){}
+function guardar(){
+  if(repaso)return;                       // el repaso no cuenta como nota
+  try{
+    var k='lulu:'+location.pathname.split('/').pop().replace('.html','');
+    var p={};try{p=JSON.parse(localStorage.getItem(k))||{}}catch(e){}
+    localStorage.setItem(k,JSON.stringify({
+      total:ALL.length,
+      ultimo:score,
+      mejor:Math.max(p.mejor||0,score),
+      intentos:(p.intentos||0)+1,
+      fecha:new Date().toISOString().slice(0,10)
+    }));
+  }catch(e){}                              // si el navegador lo bloquea, sigue andando igual
+}
+init();
+</script>
+</body>
+</html>
